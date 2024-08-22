@@ -25,9 +25,10 @@ export default class CounterComponent extends HTMLElement {
 
   connectedCallback() {
     this._shadowRoot.innerHTML = template;
-    this.shadowRoot
+
+    this._shadowRoot
       .querySelector(".increment")
-      .addEventListener("click", () => this.incrementCount());
+      ?.addEventListener("click", () => this.incrementCount());
   }
 
   incrementCount() {
@@ -36,6 +37,10 @@ export default class CounterComponent extends HTMLElement {
   }
 
   render() {
-    this.shadowRoot.querySelector(".count").textContent = this.count.toString();
+    const element = this._shadowRoot.querySelector(".count");
+
+    if (element) {
+      element.textContent = this.count.toString();
+    }
   }
 }

@@ -1,6 +1,4 @@
-const URL = "";
-
-class OpenBookRepository {
+export class OpenBookRepository {
   getBookList() {}
 
   getBookDetails() {}

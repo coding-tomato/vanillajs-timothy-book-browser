@@ -35,6 +35,12 @@ class ApiService {
       }
     }
   }
+
+  async get(endpoint, params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    const fullEndpoint = queryString ? `${endpoint}?${queryString}` : endpoint;
+    return this.request(fullEndpoint, { method: "GET" });
+  }
 }
 
-export const ApiClient = new ApiService("https://api.example.com");
+export const ApiClient = new ApiService("https://openlibrary.org");

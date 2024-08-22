@@ -15,6 +15,7 @@ const template = /*html*/ `
 
   <h1>App</h1>
   <counter-component></counter-component>
+  <counter-component></counter-component>
 `;
 
 export default class AppRoot extends HTMLElement {
