@@ -1,10 +1,10 @@
+import CounterComponent from "./components/counter";
+
 const styling = /*css*/ `
   :host {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
   }
 `;
 
@@ -13,9 +13,13 @@ const template = /*html*/ `
     ${styling}
   </style>
 
-  <h1>App</h1>
-  <counter-component></counter-component>
-  <counter-component></counter-component>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/books">Books</a>
+    <a href="/nonexistent">Nonexistent Page</a>
+  </nav>
+
+  <router-component id="router"></router-component>
 `;
 
 export default class AppRoot extends HTMLElement {
