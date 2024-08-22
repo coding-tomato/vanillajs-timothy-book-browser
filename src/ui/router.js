@@ -7,6 +7,7 @@ export class RouterComponent extends HTMLElement {
   constructor() {
     super();
     this.routes = new Map();
+    this.currentRoute = "";
     this.notFoundComponent = null;
   }
 
@@ -20,10 +21,21 @@ export class RouterComponent extends HTMLElement {
 
     window.addEventListener("popstate", () => this.render());
 
-    this.addEventListener("click", (e) => {
-      if (e.target.tagName === "A") {
+    // Creates a listener for all click events, detects if
+    // the click was on an <a> tag, in which case triggers
+    // Navigation
+    window.addEventListener("click", (e) => {
+      const path = e.composedPath();
+      const anchor = path.find((el) => el.tagName === "A");
+
+      if (anchor) {
         e.preventDefault();
-        this.navigate(e.target.getAttribute("href"));
+
+        const newRoute = anchor.getAttribute("href");
+
+        if (newRoute !== this.currentRoute) {
+          this.navigate(newRoute);
+        }
       }
     });
   }
@@ -43,6 +55,7 @@ export class RouterComponent extends HTMLElement {
 
   render() {
     const path = window.location.pathname;
+    this.currentRoute = path;
     let component = this.routes.get(path);
 
     if (!component && this.notFoundComponent) {
