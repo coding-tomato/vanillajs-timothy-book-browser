@@ -16,17 +16,17 @@ const template = /*html*/ `
   <button class="increment">Increment</button>
 `;
 
-export default class CounterComponent extends HTMLElement {
+export class CounterComponent extends HTMLElement {
   constructor() {
     super();
-    this._shadowRoot = this.attachShadow({ mode: "open" });
+    this.attachShadow({ mode: "open" });
     this.count = 0;
   }
 
   connectedCallback() {
-    this._shadowRoot.innerHTML = template;
+    this.shadowRoot.innerHTML = template;
 
-    this._shadowRoot
+    this.shadowRoot
       .querySelector(".increment")
       ?.addEventListener("click", () => this.incrementCount());
   }
@@ -37,7 +37,7 @@ export default class CounterComponent extends HTMLElement {
   }
 
   render() {
-    const element = this._shadowRoot.querySelector(".count");
+    const element = this.shadowRoot.querySelector(".count");
 
     if (element) {
       element.textContent = this.count.toString();
