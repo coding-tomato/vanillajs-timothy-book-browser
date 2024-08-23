@@ -7,12 +7,8 @@ class ApiService {
 
   async request(endpoint, options = {}) {
     const url = `${this.baseUrl}${endpoint}`;
-    const defaultOptions = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
 
+    const defaultOptions = {};
     const mergedOptions = { ...defaultOptions, ...options };
 
     try {
@@ -43,4 +39,4 @@ class ApiService {
   }
 }
 
-export const ApiClient = new ApiService("https://openlibrary.org");
+export const SearchApiClient = new ApiService("https://openlibrary.org");

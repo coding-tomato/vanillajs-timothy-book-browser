@@ -1,5 +1,3 @@
-import CounterComponent from "./components/counter";
-
 const styling = /*css*/ `
   :host {
     width: 100%;

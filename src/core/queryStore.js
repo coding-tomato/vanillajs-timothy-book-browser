@@ -3,11 +3,12 @@ import { QueryStoreError } from "./exceptions";
 /*
   Usage:
   - In a component, you should during component initialization,
-    create a Query and pass parameters to it. 
+    create a Query and pass parameters to it. By default, the values
+    you set in your key array, will be passed down to the queryFn.
     Example: 
       queryStore.query(
-        ['books', ...searchTerms],
-        () => asyncFunction(searchTerms)
+        ['books', page, searchTerms],
+        (_, page, searchTerms) => asyncFunction(page, searchTerms)
       )
   - Now, other components can subscribe to this key and receive the
     exact same data, as long as they use the exact same key.
@@ -46,7 +47,7 @@ class QueryStore {
    * @param {QueryKey} key - Unique query key to identify the query
    * @param {function(): Promise<void>} queryFn - Async function to fire
    */
-  async query(key, queryFn, options = {}) {
+  async query({ key, queryFn, options = {} }) {
     const stringKey = JSON.stringify(key);
     const defaultOptions = {
       staleTime: 5 * 60 * 1000, // 5 minutes
@@ -66,7 +67,7 @@ class QueryStore {
     try {
       this.notifyListeners(stringKey, { status: "loading" });
 
-      const data = await queryFn();
+      const data = await queryFn(...key);
 
       cacheEntry = {
         data,
@@ -102,7 +103,7 @@ class QueryStore {
   }
 
   /**
-   * Register query within the store
+   * Remove all cleanup functions for a query key (as there's a new request coming through)
    * @param {QueryKeyString} stringKey - Unique identifier to clean the query key when re-declared
    */
   cleanup(stringKey) {

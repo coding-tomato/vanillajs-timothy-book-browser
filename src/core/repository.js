@@ -1,7 +1,12 @@
-export class OpenBookRepository {
-  getBookList() {}
+import { SearchApiClient } from "./api";
 
-  getBookDetails() {}
-
-  getBookCover() {}
+export function getBookList(searchTerms, page) {
+  return SearchApiClient.get("/search.json", {
+    q: searchTerms,
+    page,
+  });
 }
+
+export function getBookDetails() {}
+
+export function getBookCover() {}
