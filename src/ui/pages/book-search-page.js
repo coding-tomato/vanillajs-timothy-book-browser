@@ -7,6 +7,7 @@ export class BookSearchPage extends HTMLElement {
     super();
 
     this.button = null;
+
     this.queryUnsubscribe = null;
     this.requestStatus = "";
 
@@ -17,27 +18,28 @@ export class BookSearchPage extends HTMLElement {
   connectedCallback() {
     this.render();
 
-    this.button = this.querySelector(".requestButton");
-    this.makeRequest = this.makeRequest.bind(this);
-    if (this.button) this.button.addEventListener("click", this.makeRequest);
-
     this.searchUnsubscribe = stateManager.subscribe(({ search }) => {
       this.search = search;
       this.render();
     });
   }
 
+  setupEventListeners() {
+    this.button = document.querySelector(".requestButton");
+    this.makeRequest = this.makeRequest.bind(this);
+
+    if (this.button) this.button.addEventListener("click", this.makeRequest);
+  }
+
   disconnectedCallback() {
     this.button.removeEventListener("click", this.makeRequest);
 
-    if (this.queryUnsubscribe) {
-      this.queryUnsubscribe();
-      this.searchUnsubscribe();
-    }
+    this.queryUnsubscribe && this.queryUnsubscribe();
+    this.searchUnsubscribe && this.searchUnsubscribe();
   }
 
-  async makeRequest() {
-    const queryKey = ["books", "Francys", "1", "20"];
+  makeRequest() {
+    const queryKey = ["books", "Java", "1", "20"];
 
     this.queryUnsubscribe = queryStore.subscribe(queryKey, (response) => {
       this.requestStatus = response.status;
@@ -49,7 +51,7 @@ export class BookSearchPage extends HTMLElement {
       this.render();
     });
 
-    await queryStore.query({
+    queryStore.query({
       queryKey,
       queryFn: async (_, searchTerms, page, limit) => {
         return getBookList(searchTerms, page, limit);
@@ -67,9 +69,11 @@ export class BookSearchPage extends HTMLElement {
 
       <h1>Search page</h1>
       <search-bar-component></search-bar-component></br>
-      <small>${this.search ? this.search : "Search something bro..."}</small>
+      <small>${this.search ? this.search : "Search something bro..."}</small></br>
 
-      <button class="requestButton">Request books page 1</button>
+      </br>
+
+      <button class="requestButton">Request books page 1</button></br>
 
       <p>${this.requestStatus}</p>
 
@@ -87,5 +91,7 @@ export class BookSearchPage extends HTMLElement {
         }
       </ul>
     `;
+
+    this.setupEventListeners()
   }
 }
