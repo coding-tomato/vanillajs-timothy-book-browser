@@ -28,6 +28,26 @@ class QueryStore {
     this.cache = new Map();
     this.listeners = new Map();
     this.cleanupFunctions = new Map();
+
+    this.loadPersistedCache();
+
+    window.addEventListener("beforeunload", () => {
+      this.savePersistedCache();
+    });
+  }
+
+  loadPersistedCache() {
+    const persistedState = sessionStorage.getItem("query-cache");
+
+    if (persistedState) {
+      this.cache = new Map(JSON.parse(persistedState));
+    }
+  }
+  savePersistedCache() {
+    sessionStorage.setItem(
+      "query-cache",
+      JSON.stringify(Array.from(this.cache.entries()))
+    );
   }
 
   async query({ queryKey, queryFn, options = {} }) {
@@ -38,10 +58,11 @@ class QueryStore {
     };
     const mergedOptions = { ...defaultOptions, ...options };
 
-    let cacheEntry = this.cache.get(queryKey);
+    let cacheEntry = this.cache.get(stringKey);
 
     if (cacheEntry && !this.isStale(cacheEntry, mergedOptions.staleTime)) {
-      return cacheEntry.data;
+      this.notifyListeners(stringKey, cacheEntry);
+      return;
     }
 
     // Clean up any existing query for this key
@@ -58,7 +79,7 @@ class QueryStore {
         status: "success",
       };
 
-      this.cache.set(queryKey, cacheEntry);
+      this.cache.set(stringKey, cacheEntry);
       this.notifyListeners(stringKey, { status: "success", data });
 
       const timeoutId = setTimeout(
@@ -68,8 +89,6 @@ class QueryStore {
       this.cleanupFunctions.set(stringKey, () => {
         clearTimeout(timeoutId);
       });
-
-      return data;
     } catch (e) {
       const error = new QueryStoreError(e);
       cacheEntry = {
@@ -78,7 +97,7 @@ class QueryStore {
         status: "error",
       };
 
-      this.cache.set(queryKey, cacheEntry);
+      this.cache.set(stringKey, cacheEntry);
       this.notifyListeners(stringKey, { status: "error", error });
 
       throw error;
@@ -105,19 +124,23 @@ class QueryStore {
 
   subscribe(key, listener) {
     const stringKey = JSON.stringify(key);
+    const cacheEntry = this.cache.get(stringKey);
 
     if (!this.listeners.has(stringKey)) {
       this.listeners.set(stringKey, new Set());
     }
     this.listeners.get(stringKey).add(listener);
 
-    return () => {
-      const keyListeners = this.listeners.get(stringKey);
-      keyListeners.delete(listener);
-      if (keyListeners.size === 0) {
-        this.listeners.delete(stringKey);
-      }
-    };
+    return [
+      cacheEntry,
+      () => {
+        const keyListeners = this.listeners.get(stringKey);
+        keyListeners.delete(listener);
+        if (keyListeners.size === 0) {
+          this.listeners.delete(stringKey);
+        }
+      },
+    ];
   }
 
   notifyListeners(stringKey, data) {

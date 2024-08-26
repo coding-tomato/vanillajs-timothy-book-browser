@@ -14,9 +14,6 @@ export class HomePageComponent extends HTMLElement {
       <h1>Home page</h1>
 
       <search-bar-component></search-bar-component>
-
-      <counter-component></counter-component>
-      <counter-component></counter-component>
     `;
   }
 }

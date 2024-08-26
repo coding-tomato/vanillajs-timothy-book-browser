@@ -15,7 +15,7 @@ class StateManager extends EventTarget {
     super();
 
     this.state = {
-      search: "",
+      searchQueryKey: [],
     };
   }
 

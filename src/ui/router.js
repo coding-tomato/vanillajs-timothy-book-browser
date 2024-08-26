@@ -8,14 +8,13 @@ export class RouterComponent extends HTMLElement {
     super();
     this.routes = new Map();
     this.currentRoute = "";
-    this.notFoundComponent = null;
+    this.notFoundComponent = "not-found-page";
   }
 
   connectedCallback() {
     this.addRoute("/", "home-component-page");
     this.addRoute("/books", "book-search-page");
     this.addRoute("/books/detail", "books-detail-page");
-    this.setNotFound("not-found-page");
 
     this.render();
 

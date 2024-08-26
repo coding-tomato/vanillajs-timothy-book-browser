@@ -1,7 +1,8 @@
 import "./style.css";
 
 import { AppRoot } from "./ui/app";
-import { CounterComponent } from "./ui/components/counter";
+import { BookCardComponent } from "./ui/components/book-card";
+import { BookListComponent } from "./ui/components/book-list";
 import { SearchBarComponent } from "./ui/components/search-bar";
 import { RouterComponent } from "./ui/router";
 
@@ -10,5 +11,6 @@ window.customElements.define("router-component", RouterComponent);
 window.customElements.define("app-root", AppRoot);
 
 // Components
-window.customElements.define("counter-component", CounterComponent);
 window.customElements.define("search-bar-component", SearchBarComponent);
+window.customElements.define("book-card-component", BookCardComponent);
+window.customElements.define("book-list-component", BookListComponent);
