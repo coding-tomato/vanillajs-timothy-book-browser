@@ -32,7 +32,7 @@ export class BookListComponent extends HTMLElement {
         }
       );
       this.queryUnsubscribe = unsubscribe;
-      this.books = cacheEntry.data;
+      this.books = cacheEntry ? cacheEntry.data : null;
 
       this.render();
     });
@@ -48,7 +48,9 @@ export class BookListComponent extends HTMLElement {
       .book-list {
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
         gap: 1rem;
+        padding: 0;
       }
     `;
 
@@ -65,6 +67,7 @@ export class BookListComponent extends HTMLElement {
                 .map(
                   (book) => /*html*/ `
                     <book-card-component
+                      id='${book.id}'
                       title='${book.title}'
                       author-name='${book.authorName}'
                       cover-id='${book.coverId}'

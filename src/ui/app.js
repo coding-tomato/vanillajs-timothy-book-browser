@@ -9,10 +9,18 @@ export class AppRoot extends HTMLElement {
 
   render() {
     const styling = /*css*/ `
-      :host {
+      app-root {
         width: 100%;
+        min-height: 100dvh;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1280px;
+        border: 1px solid #DADADA;
+        padding: 0 1rem 0 1rem;
       }
     `;
 
@@ -21,13 +29,15 @@ export class AppRoot extends HTMLElement {
         ${styling}
       </style>
 
-      <nav>
-        <a href="/">Home</a>
-        <a href="/books">Books</a>
-        <a href="/nonexistent">Nonexistent Page</a>
-      </nav>
+      <div class="container">
+        <nav>
+          <a href="/">Home</a>
+          <a href="/books">Books</a>
+          <a href="/nonexistent">Nonexistent Page</a>
+        </nav>
 
-      <router-component id="router"></router-component>
+        <router-component id="router"></router-component>
+      </div>
     `;
   }
 }

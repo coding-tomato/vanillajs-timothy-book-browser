@@ -1,8 +1,15 @@
 import { ApiError } from "./exceptions";
 
+const types = ["json", "blob"];
+
 class ApiService {
-  constructor(baseUrl) {
+  constructor(baseUrl, type) {
+    if (!types.includes(type)) {
+      throw new Error(`Type ${type} not included in types ${types.join(",")}`);
+    }
+
     this.baseUrl = baseUrl;
+    this.type = type;
   }
 
   async request(endpoint, options = {}) {
@@ -21,8 +28,11 @@ class ApiService {
         );
       }
 
-      const data = await response.json();
-      return data;
+      if (this.type === "json") {
+        return await response.json();
+      } else if (this.type === "blob") {
+        return await response.blob();
+      }
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -39,4 +49,11 @@ class ApiService {
   }
 }
 
-export const SearchApiClient = new ApiService("https://openlibrary.org");
+export const SearchApiClient = new ApiService(
+  "https://openlibrary.org",
+  "json"
+);
+export const CoverIdApiClient = new ApiService(
+  "https://covers.openlibrary.org/b/id",
+  "blob"
+);

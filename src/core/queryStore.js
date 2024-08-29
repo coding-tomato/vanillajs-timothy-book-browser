@@ -62,7 +62,7 @@ class QueryStore {
 
     if (cacheEntry && !this.isStale(cacheEntry, mergedOptions.staleTime)) {
       this.notifyListeners(stringKey, cacheEntry);
-      return;
+      return cacheEntry;
     }
 
     // Clean up any existing query for this key
@@ -89,8 +89,11 @@ class QueryStore {
       this.cleanupFunctions.set(stringKey, () => {
         clearTimeout(timeoutId);
       });
+
+      return cacheEntry;
     } catch (e) {
       const error = new QueryStoreError(e);
+
       cacheEntry = {
         error,
         lastUpdated: Date.now(),

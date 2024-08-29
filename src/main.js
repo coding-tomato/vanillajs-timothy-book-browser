@@ -1,10 +1,14 @@
-import "./style.css";
+import { config } from "./config";
 
 import { AppRoot } from "./ui/app";
 import { BookCardComponent } from "./ui/components/book-card";
 import { BookListComponent } from "./ui/components/book-list";
 import { SearchBarComponent } from "./ui/components/search-bar";
 import { RouterComponent } from "./ui/router";
+
+import "./style.css";
+
+config();
 
 // Bootstrap
 window.customElements.define("router-component", RouterComponent);

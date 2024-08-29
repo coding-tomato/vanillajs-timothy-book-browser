@@ -1,4 +1,4 @@
-import { SearchApiClient } from "./api";
+import { CoverIdApiClient, SearchApiClient } from "./api";
 
 export async function getBookList(searchTerms, page, limit) {
   const response = await SearchApiClient.get("/search.json", {
@@ -21,4 +21,14 @@ export async function getBookList(searchTerms, page, limit) {
 
 export function getBookDetails() {}
 
-export function getBookCover() {}
+const availableSizes = ["S", "M", "L"];
+export async function getBookCover(coverId, size) {
+  if (!availableSizes.includes(size)) {
+    throw new Error("Unsupported image size requested.");
+  }
+
+  const blob = await CoverIdApiClient.get(`/${coverId}-${size}.jpg`);
+  const imageUrl = URL.createObjectURL(blob);
+
+  return imageUrl;
+}

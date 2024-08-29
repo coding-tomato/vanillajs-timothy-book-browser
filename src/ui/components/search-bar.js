@@ -28,22 +28,14 @@ export class SearchBarComponent extends HTMLElement {
     this.input = this.shadowRoot.querySelector("input");
     this.button = this.shadowRoot.querySelector("button");
 
-    this.performSearch = this.performSearch.bind(this);
-    this.handleKeyboardInput = this.handleKeyboardInput.bind(this);
-
     this.button.addEventListener("click", this.performSearch);
     this.input.addEventListener("keyup", this.handleKeyboardInput);
   }
 
-  clearEventListeners() {
-    this.button.removeEventListener("click", this.performSearch);
-    this.input.removeEventListener("keyup", this.handleKeyboardInput);
-  }
-
-  handleKeyboardInput(e) {
+  handleKeyboardInput = (e) => {
     if (e.key === "Enter") this.performSearch();
-  }
-  performSearch() {
+  };
+  performSearch = () => {
     const searchTerms = this.shadowRoot.querySelector("input").value;
     if (searchTerms === "") return;
 
@@ -56,7 +48,7 @@ export class SearchBarComponent extends HTMLElement {
         return getBookList(searchTerms, page, limit);
       },
     });
-  }
+  };
 
   render() {
     const styling = /*css*/ ``;

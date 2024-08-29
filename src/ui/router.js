@@ -9,6 +9,8 @@ export class RouterComponent extends HTMLElement {
     this.routes = new Map();
     this.currentRoute = "";
     this.notFoundComponent = "not-found-page";
+
+    routerInstance.setComponent(this);
   }
 
   connectedCallback() {
@@ -68,6 +70,26 @@ export class RouterComponent extends HTMLElement {
     }
   }
 }
+
+class RouterInstance {
+  constructor() {
+    this.component = null;
+  }
+
+  setComponent(component) {
+    this.component = component;
+  }
+
+  navigate(path) {
+    if (this.component) {
+      this.component.navigate(path);
+    } else {
+      console.error("Router component not set");
+    }
+  }
+}
+
+export const routerInstance = new RouterInstance();
 
 customElements.define("home-component-page", HomePageComponent);
 customElements.define("book-search-page", BookSearchPage);
