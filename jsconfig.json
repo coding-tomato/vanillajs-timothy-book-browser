@@ -1,7 +1,16 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "target": "ES6"
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "checkJs": true,
+    "allowJs": true,
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "vite.config.js"],
+  "exclude": ["node_modules", "dist"]
 }

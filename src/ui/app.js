@@ -21,6 +21,7 @@ export class AppRoot extends HTMLElement {
         max-width: 1280px;
         border: 1px solid #DADADA;
         padding: 0 1rem 0 1rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
       }
     `;
 
@@ -33,7 +34,6 @@ export class AppRoot extends HTMLElement {
         <nav>
           <a href="/">Home</a>
           <a href="/books">Books</a>
-          <a href="/nonexistent">Nonexistent Page</a>
         </nav>
 
         <router-component id="router"></router-component>

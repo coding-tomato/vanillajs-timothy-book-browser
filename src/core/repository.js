@@ -16,7 +16,10 @@ export async function getBookList(searchTerms, page, limit) {
     coverId: book.cover_i,
   }));
 
-  return data;
+  return {
+    books: data,
+    pageCount: Math.ceil(response.numFound / limit),
+  };
 }
 
 export function getBookDetails() {}
@@ -27,8 +30,19 @@ export async function getBookCover(coverId, size) {
     throw new Error("Unsupported image size requested.");
   }
 
-  const blob = await CoverIdApiClient.get(`/${coverId}-${size}.jpg`);
-  const imageUrl = URL.createObjectURL(blob);
+  return new Promise(async (resolve, reject) => {
+    const reader = new FileReader();
 
-  return imageUrl;
+    try {
+      const blob = await CoverIdApiClient.get(`/${coverId}-${size}.jpg`);
+
+      reader.readAsDataURL(blob);
+      reader.onloadend = function () {
+        const base64data = reader.result;
+        resolve(base64data);
+      };
+    } catch (e) {
+      reject(e);
+    }
+  });
 }

@@ -10,8 +10,6 @@ export class BookListComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
-
     this.searchUnsubscribe = stateManager.subscribe((state) => {
       const { searchQueryKey } = state;
 
@@ -21,18 +19,19 @@ export class BookListComponent extends HTMLElement {
 
       const [cacheEntry, unsubscribe] = queryStore.subscribe(
         searchQueryKey,
-        (response) => {
-          this.requestStatus = response.status;
+        (cacheEntry) => {
+          this.requestStatus = cacheEntry.status;
 
-          if (response.data) {
-            this.books = response.data;
+          if (cacheEntry.data) {
+            this.books = cacheEntry.data.books;
           }
 
           this.render();
         }
       );
+
       this.queryUnsubscribe = unsubscribe;
-      this.books = cacheEntry ? cacheEntry.data : null;
+      this.books = cacheEntry ? cacheEntry.data.books : null;
 
       this.render();
     });
@@ -51,18 +50,30 @@ export class BookListComponent extends HTMLElement {
         justify-content: center;
         gap: 1rem;
         padding: 0;
+        padding-bottom: 10rem;
+      }
+
+      p {
+        width: 100%;
+        text-align: center;
+        opacity: 0.5;
       }
     `;
+
+    const booksExist = Boolean(this.books && this.books.length > 0);
+    const noBooksFound = Boolean(this.books && this.books.length === 0);
+    const booksLoading = !Boolean(this.books);
 
     this.innerHTML = /*html*/ `
       <style>
         ${styling}
       </style>
-      <p>${this.requestStatus}</p>
+
+      ${this.requestStatus === "loading" ? /*html*/ `<p>Cargando...</p>` : ""}
 
       <ul class="book-list">
         ${
-          this.books
+          booksExist
             ? this.books
                 .map(
                   (book) => /*html*/ `
@@ -75,8 +86,11 @@ export class BookListComponent extends HTMLElement {
                   `
                 )
                 .join("")
-            : "You need to make a search"
+            : ""
         }
+
+        ${noBooksFound ? "There are no books with that search" : ""}
+        ${booksLoading ? "Loading..." : ""}
       </ul>
     `;
   }

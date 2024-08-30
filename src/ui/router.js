@@ -16,7 +16,7 @@ export class RouterComponent extends HTMLElement {
   connectedCallback() {
     this.addRoute("/", "home-component-page");
     this.addRoute("/books", "book-search-page");
-    this.addRoute("/books/detail", "books-detail-page");
+    this.addRoute("/books/detail", "book-detail-page");
 
     this.render();
 

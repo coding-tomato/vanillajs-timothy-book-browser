@@ -1,3 +1,4 @@
+import { queryStore } from "../../core/queryStore";
 import { getBookCover } from "../../core/repository";
 import { routerInstance } from "../router";
 
@@ -36,14 +37,21 @@ export class BookCardComponent extends HTMLElement {
       return;
     }
 
-    const imageUrl = await getBookCover(this.coverId, "M");
+    const queryKey = ["covers", "M", this.coverId];
+    const response = await queryStore.query({
+      queryKey,
+      queryFn: async (_, size, coverId) => {
+        return getBookCover(coverId, size);
+      },
+    });
+    const imageUrl = response.data;
     this.imgSrc = imageUrl;
 
     this.render();
   }
 
   navigate = () => {
-    routerInstance.navigate(`/books/${this.id}`);
+    routerInstance.navigate(`/books/detail`);
   };
 
   render() {
@@ -76,6 +84,7 @@ export class BookCardComponent extends HTMLElement {
         height: 100%;
         object-fit: contain;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease-in;
       }
       .cover p {
         opacity: 0.4;
@@ -84,6 +93,15 @@ export class BookCardComponent extends HTMLElement {
       .info {
         flex-shrink: 0;
         padding: 0.25rem;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
     `;
 
@@ -96,7 +114,13 @@ export class BookCardComponent extends HTMLElement {
         ${this.coverId !== "undefined" && this.imgSrc === null ? "<p>Cargando...</p>" : ""}
         ${
           this.coverId !== "undefined" && this.imgSrc !== null
-            ? `<img id="coverImage" alt="Book cover for ${this.title}" src=${this.imgSrc}>`
+            ? /*html*/ `
+            <img
+              class="fade-in"
+              id="coverImage"
+              alt="Book cover for ${this.title}"
+              src=${this.imgSrc}
+            >`
             : ""
         }
         ${this.coverId === "undefined" ? "<p>Book with no cover</p>" : ""}

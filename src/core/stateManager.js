@@ -10,12 +10,14 @@
   search terms.
 */
 
+const PAGE_LIMIT = 20;
+
 class StateManager extends EventTarget {
   constructor() {
     super();
 
     this.state = {
-      searchQueryKey: [],
+      searchQueryKey: ["books", "Hello World!", 1, PAGE_LIMIT],
     };
   }
 

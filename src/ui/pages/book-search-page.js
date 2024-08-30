@@ -18,11 +18,12 @@ export class BookSearchPage extends HTMLElement {
       <h1>Search page</h1>
 
       <search-bar-component></search-bar-component></br>
-      <small>${this.searchQueryKey ? this.searchQueryKey : "Search something bro..."}</small></br>
+      <pagination-component></pagination-component>
 
       </br>
 
       <book-list-component></book-list-component>
+
     `;
   }
 }

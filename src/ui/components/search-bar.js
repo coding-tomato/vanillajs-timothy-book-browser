@@ -1,8 +1,6 @@
-import { queryStore } from "../../core/queryStore";
-import { getBookList } from "../../core/repository";
-import stateManager from "../../core/stateManager";
-
-const PAGE_LIMIT = 20;
+import { queryStore } from "@/core/queryStore";
+import { getBookList } from "@/core/repository";
+import stateManager from "@/core/stateManager";
 
 export class SearchBarComponent extends HTMLElement {
   constructor() {
@@ -14,36 +12,40 @@ export class SearchBarComponent extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    this.setupEventListeners();
 
-    this.shadowRoot.querySelector("input").value = "Test";
-    this.performSearch();
-  }
-
-  disconnectedCallback() {
-    this.clearEventListeners();
+    const [, searchTerms] = stateManager.getState().searchQueryKey;
+    this.shadowRoot.querySelector("input").value = searchTerms.toString();
+    this.searchUnsubscribe = stateManager.subscribe((state) => {
+      const { searchQueryKey } = state;
+      this.performSearch(searchQueryKey);
+      this.render();
+    });
   }
 
   setupEventListeners() {
     this.input = this.shadowRoot.querySelector("input");
     this.button = this.shadowRoot.querySelector("button");
 
-    this.button.addEventListener("click", this.performSearch);
+    this.button.addEventListener("click", this.updateState);
     this.input.addEventListener("keyup", this.handleKeyboardInput);
   }
 
   handleKeyboardInput = (e) => {
-    if (e.key === "Enter") this.performSearch();
+    if (e.key === "Enter") this.updateState();
   };
-  performSearch = () => {
+  updateState = () => {
     const searchTerms = this.shadowRoot.querySelector("input").value;
     if (searchTerms === "") return;
 
-    const queryKey = ["books", searchTerms, "1", PAGE_LIMIT];
-    stateManager.setState({ searchQueryKey: queryKey });
+    const searchQueryKeyClone = [...stateManager.getState().searchQueryKey];
+    searchQueryKeyClone[1] = searchTerms; // Introducing search terms
+    searchQueryKeyClone[2] = 1; // Restarting to initial page on search
+    stateManager.setState({ searchQueryKey: searchQueryKeyClone });
+  };
 
+  performSearch = (searchQueryKey) => {
     queryStore.query({
-      queryKey,
+      queryKey: searchQueryKey,
       queryFn: async (_, searchTerms, page, limit) => {
         return getBookList(searchTerms, page, limit);
       },
@@ -63,5 +65,6 @@ export class SearchBarComponent extends HTMLElement {
     `;
 
     this.shadowRoot.innerHTML = template;
+    this.setupEventListeners();
   }
 }
