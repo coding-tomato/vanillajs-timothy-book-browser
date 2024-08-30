@@ -9,10 +9,10 @@ Book browser built for studying purposes, made from scratch with Web Components 
 - 🟢 Project setup to compose the site with Web Components.
 - 🟢 Client-side routing.
 - 🟢 Cross component communication through a State Manager.
-- ⚪️ A TanStack Query like state manager to sync and validate data fetching.
+- 🟢 ️A TanStack Query like state manager to sync and validate data fetching.
 - ⚪️ Styling to make it look nice (maybe some animations 🙃).
 
 ## Functionality
 
-- ⚪️ Be able to perform book searches.
+- 🟢  Be able to perform book searches by title.
 - ⚪️ Display a detailed book page.
