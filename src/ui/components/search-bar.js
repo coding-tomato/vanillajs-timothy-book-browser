@@ -1,6 +1,7 @@
 import { queryStore } from "@/core/queryStore";
 import { getBookList } from "@/core/repository";
 import stateManager from "@/core/stateManager";
+import { routerInstance } from "../router";
 
 export class SearchBarComponent extends HTMLElement {
   constructor() {
@@ -37,6 +38,11 @@ export class SearchBarComponent extends HTMLElement {
     const searchTerms = this.shadowRoot.querySelector("input").value;
     if (searchTerms === "") return;
 
+    const path = window.location.pathname;
+    if (path !== "/books") {
+      routerInstance.navigate("/books");
+    }
+
     const searchQueryKeyClone = [...stateManager.getState().searchQueryKey];
     searchQueryKeyClone[1] = searchTerms; // Introducing search terms
     searchQueryKeyClone[2] = 1; // Restarting to initial page on search
@@ -53,14 +59,20 @@ export class SearchBarComponent extends HTMLElement {
   };
 
   render() {
-    const styling = /*css*/ ``;
+    const styling = /*css*/ `
+      :host {
+        padding-top: 0.50rem;
+        display: block;
+      }
+    `;
 
     const template = /*html*/ `
       <style>
         ${styling}
       </style>
     
-      <input type="text" placeholder="Search..."/>
+      <label for="search-input"> Search a book by title</label> ->
+      <input name="search-input" type="text" placeholder="Search..."/>
       <button>Search</button>
     `;
 

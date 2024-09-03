@@ -8,7 +8,13 @@ export class BookSearchPage extends HTMLElement {
   }
 
   render() {
-    const styling = /*css*/ ``;
+    const styling = /*css*/ `
+      h1 {
+        font-size: 3rem;
+        margin: 0.5rem 0 0.5rem;
+        font-weight: 600;
+      } 
+    `;
 
     this.innerHTML = /*html*/ `
       <style>

@@ -23,6 +23,10 @@ export class AppRoot extends HTMLElement {
         padding: 0 1rem 0 1rem;
         box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
       }
+
+      nav {
+        margin: 0.5rem 0 0.5rem;
+      }
     `;
 
     this.innerHTML = /*html*/ `
@@ -32,11 +36,13 @@ export class AppRoot extends HTMLElement {
 
       <div class="container">
         <nav>
-          <a href="/">Home</a>
+          .. / <a href="/">Home</a> /
           <a href="/books">Books</a>
         </nav>
 
-        <router-component id="router"></router-component>
+        <main>
+          <router-component id="router"></router-component>
+        </main>
       </div>
     `;
   }

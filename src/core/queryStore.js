@@ -37,14 +37,14 @@ class QueryStore {
   }
 
   loadPersistedCache() {
-    const persistedState = sessionStorage.getItem("query-cache");
+    const persistedState = localStorage.getItem("query-cache");
 
     if (persistedState) {
       this.cache = new Map(JSON.parse(persistedState));
     }
   }
   savePersistedCache() {
-    sessionStorage.setItem(
+    localStorage.setItem(
       "query-cache",
       JSON.stringify(Array.from(this.cache.entries()))
     );

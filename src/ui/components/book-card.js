@@ -16,7 +16,9 @@ export class BookCardComponent extends HTMLElement {
   }
 
   setupEventListeners() {
-    this.shadowRoot.addEventListener("click", this.navigate);
+    this.shadowRoot.addEventListener("click", () => {
+      routerInstance.navigate(`/books/detail`);
+    });
   }
 
   static get observedAttributes() {
@@ -33,7 +35,7 @@ export class BookCardComponent extends HTMLElement {
   }
 
   async loadCover() {
-    if (this.coverId === "undefined") {
+    if (this.coverId === "undefined" || this.imgSrc !== null) {
       return;
     }
 
@@ -49,10 +51,6 @@ export class BookCardComponent extends HTMLElement {
 
     this.render();
   }
-
-  navigate = () => {
-    routerInstance.navigate(`/books/detail`);
-  };
 
   render() {
     const styling = /*css*/ `
