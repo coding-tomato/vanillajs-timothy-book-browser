@@ -2,6 +2,8 @@
 
 Book browser built for studying purposes, made from scratch with Web Components consuming data from the [Open Book API](https://openlibrary.org/developers/api).
 
+[Live preview](https://timothy-book-browser-openlibrary.netlify.app/)
+
 ## Objectives:
 
 - 🟢 Project setup to compose the site with Web Components.
