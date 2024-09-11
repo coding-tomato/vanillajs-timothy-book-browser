@@ -53,7 +53,7 @@ export class AppRoot extends HTMLElement {
 
         <footer>
           2024 | Project built to study Reactivity and Web Components |
-          <a href="https://github.com/coding-tomato/vanillajs-open-book-browser">
+          <a href="https://github.com/coding-tomato/vanillajs-open-book-browser" target="_blank">
             Code
           </a>
         </footer>
