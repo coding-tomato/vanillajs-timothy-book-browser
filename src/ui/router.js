@@ -29,12 +29,11 @@ export class RouterComponent extends HTMLElement {
       const path = e.composedPath();
       const anchor = path.find((el) => el.tagName === "A");
 
-      if (anchor && this.routes.has(path)) {
-        e.preventDefault();
-
+      if (anchor) {
         const newRoute = anchor.getAttribute("href");
 
-        if (newRoute !== this.currentRoute) {
+        if (newRoute !== this.currentRoute && this.routes.has(newRoute)) {
+          e.preventDefault();
           this.navigate(newRoute);
         }
       }
