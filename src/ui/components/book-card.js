@@ -1,3 +1,4 @@
+import stateManager from "@/core/stateManager";
 import { queryStore } from "../../core/queryStore";
 import { getBookCover } from "../../core/repository";
 import { routerInstance } from "../router";
@@ -16,10 +17,19 @@ export class BookCardComponent extends HTMLElement {
   }
 
   setupEventListeners() {
-    this.shadowRoot.addEventListener("click", () => {
-      routerInstance.navigate(`/books/detail`);
-    });
+    this.shadowRoot.addEventListener("click", this.clickHandler);
   }
+  clearEventListeners() {
+    this.shadowRoot.removeEventListener("click", this.clickHandler);
+  }
+
+  clickHandler = () => {
+    stateManager.setState({
+      detailBookId: this.id === "undefined" ? undefined : this.id,
+      detailBookCoverId: this.coverId === "undefind" ? undefined : this.coverId,
+    });
+    routerInstance.navigate(`/books/detail`);
+  };
 
   static get observedAttributes() {
     return ["id", "title", "cover-id", "author-name"];
@@ -53,6 +63,8 @@ export class BookCardComponent extends HTMLElement {
   }
 
   render() {
+    this.clearEventListeners();
+
     const styling = /*css*/ `
       :host {
         display: flex;
@@ -82,6 +94,7 @@ export class BookCardComponent extends HTMLElement {
         height: 100%;
         object-fit: contain;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
         animation: fadeIn 0.5s ease-in;
       }
       .cover p {
@@ -108,13 +121,12 @@ export class BookCardComponent extends HTMLElement {
         ${styling}
       </style>
 
-      <div class="cover">
+      <div class="cover fade-in">
         ${this.coverId !== "undefined" && this.imgSrc === null ? "<p>Cargando...</p>" : ""}
         ${
-          this.coverId !== "undefined" && this.imgSrc !== null
+          this.imgSrc
             ? /*html*/ `
             <img
-              class="fade-in"
               id="coverImage"
               alt="Book cover for ${this.title}"
               src=${this.imgSrc}

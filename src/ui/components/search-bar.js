@@ -9,6 +9,8 @@ export class SearchBarComponent extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.input = null;
     this.button = null;
+
+    this.stateUnsubscribe = null;
   }
 
   connectedCallback() {
@@ -16,11 +18,18 @@ export class SearchBarComponent extends HTMLElement {
 
     const [, searchTerms] = stateManager.getState().searchQueryKey;
     this.shadowRoot.querySelector("input").value = searchTerms.toString();
-    this.searchUnsubscribe = stateManager.subscribe((state) => {
+    this.stateUnsubscribe = stateManager.subscribe((state) => {
       const { searchQueryKey } = state;
       this.performSearch(searchQueryKey);
       this.render();
+      // Settings search terms in search text input
+      this.shadowRoot.querySelector("input").value =
+        searchQueryKey[1].toString();
     });
+  }
+
+  disconnectedCallback() {
+    this.stateUnsubscribe && this.stateUnsubscribe();
   }
 
   setupEventListeners() {

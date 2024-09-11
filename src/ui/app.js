@@ -17,6 +17,7 @@ export class AppRoot extends HTMLElement {
       }
 
       .container {
+        position: relative;
         width: 100%;
         max-width: 1280px;
         border: 1px solid #DADADA;
@@ -26,6 +27,12 @@ export class AppRoot extends HTMLElement {
 
       nav {
         margin: 0.5rem 0 0.5rem;
+      }
+
+      footer {
+        position: absolute;
+        bottom: 1rem;
+        left: 1rem;
       }
     `;
 
@@ -43,6 +50,13 @@ export class AppRoot extends HTMLElement {
         <main>
           <router-component id="router"></router-component>
         </main>
+
+        <footer>
+          2024 | Project built to study Reactivity and Web Components |
+          <a href="https://github.com/coding-tomato/vanillajs-open-book-browser">
+            Code
+          </a>
+        </footer>
       </div>
     `;
   }

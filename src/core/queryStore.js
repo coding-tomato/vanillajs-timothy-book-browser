@@ -1,4 +1,5 @@
 import { QueryStoreError } from "./exceptions";
+import { IndexedDBInstance } from "./indexedDbInstance";
 
 /*
   Usage:
@@ -28,6 +29,10 @@ class QueryStore {
     this.cache = new Map();
     this.listeners = new Map();
     this.cleanupFunctions = new Map();
+    this.indexedDb = new IndexedDBInstance(
+      "timothy-book-browser",
+      "query-cache"
+    );
 
     this.loadPersistedCache();
 
@@ -36,15 +41,15 @@ class QueryStore {
     });
   }
 
-  loadPersistedCache() {
-    const persistedState = localStorage.getItem("query-cache");
+  async loadPersistedCache() {
+    const persistedState = await this.indexedDb.read("query-cache");
 
     if (persistedState) {
       this.cache = new Map(JSON.parse(persistedState));
     }
   }
   savePersistedCache() {
-    localStorage.setItem(
+    this.indexedDb.write(
       "query-cache",
       JSON.stringify(Array.from(this.cache.entries()))
     );

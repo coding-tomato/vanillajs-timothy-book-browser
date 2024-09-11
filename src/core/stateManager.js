@@ -17,13 +17,12 @@ class StateManager extends EventTarget {
     super();
 
     this.state = {
-      searchQueryKey: ["books", "Hello World!", 1, PAGE_LIMIT],
+      searchQueryKey: ["books", "Harry Potter", 1, PAGE_LIMIT],
     };
   }
 
   setState(newState) {
     this.state = { ...this.state, ...newState };
-    console.log("# State: ", this.state);
     this.emit("stateChange", this.state);
   }
 

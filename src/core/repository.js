@@ -1,12 +1,13 @@
 import { CoverIdApiClient, SearchApiClient } from "./api";
+import { ApiError } from "./exceptions";
 
 export async function getBookList(searchTerms, page, limit) {
   const response = await SearchApiClient.get("/search.json", {
-    title: searchTerms,
+    q: `title:${searchTerms} AND language:eng`,
     page,
     limit,
-    fields: "title, author_name, key, cover_i",
-    lang: "es",
+    fields: "title,author_name, key,cover_i",
+    lang: "en",
   });
 
   const data = response.docs.map((book) => ({
@@ -22,7 +23,14 @@ export async function getBookList(searchTerms, page, limit) {
   };
 }
 
-export function getBookDetails() {}
+export async function getBookDetails(bookId) {
+  try {
+    const response = await SearchApiClient.get(`/works/${bookId}.json`);
+    return response;
+  } catch (e) {
+    throw new ApiError("Error getting book details");
+  }
+}
 
 const availableSizes = ["S", "M", "L"];
 export async function getBookCover(coverId, size) {
