@@ -155,7 +155,7 @@ export class BookDetailPage extends HTMLElement {
       <p>${this.bookData.description?.value || ""}</p>
       <h2>Subjects</h2>
       <ul>
-        ${this.bookData.subjects.map((subject) => `<li>${subject}</li>`).join(" ")}
+        ${Array.isArray(this.bookData.subjects) ? this.bookData.subjects.map((subject) => `<li>${subject}</li>`).join(" ") : "No subjects"}
       </ul>
     `;
   }
