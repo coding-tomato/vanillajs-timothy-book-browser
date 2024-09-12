@@ -16,13 +16,9 @@ export class BookDetailPage extends HTMLElement {
     this.searchUnsubscribe = stateManager.subscribe(async (state) => {
       const { detailBookId, detailBookCoverId } = state;
 
-      if (!detailBookId) {
-        routerInstance.navigate("/");
-        return;
-      }
-
       await this.loadData(detailBookId);
       await this.loadCover(detailBookCoverId);
+
       this.render();
     });
   }
@@ -32,6 +28,11 @@ export class BookDetailPage extends HTMLElement {
   }
 
   async loadData(detailBookId) {
+    if (!detailBookId) {
+      this.bookData = "ErrorNoBookDetailId";
+      return;
+    }
+
     const queryKey = ["detail", detailBookId];
     const response = await queryStore.query({
       queryKey,
@@ -59,6 +60,11 @@ export class BookDetailPage extends HTMLElement {
   }
 
   render() {
+    if (this.bookData === "ErrorNoBookDetailId") {
+      routerInstance.navigate("/");
+      return;
+    }
+
     const styling = /*css*/ `
       :host {
         animation: fadeIn 0.5s ease-in;
