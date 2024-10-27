@@ -16,3 +16,6 @@ Book browser built for studying purposes, made from scratch with Web Components 
 
 - 🟢 Be able to perform book searches by title.
 - 🟢️ Display a detailed book page.
+
+## Known bugs
+- There's no proper cleanup on on-flight requests during component unmount.
